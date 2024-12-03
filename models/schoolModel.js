@@ -1,4 +1,4 @@
-import pool from '../config/db.js';
+import {pool} from '../config/db.js';
 
 export async function addSchool(name, address, latitude, longitude) {
   const query = 'INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)';
