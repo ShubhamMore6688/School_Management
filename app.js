@@ -1,5 +1,7 @@
 import express from 'express';
 import schoolRoutes from './routes/schoolRoutes.js';
+import { initializeDatabase } from "./config/db.js";
+
 
 const app = express();
 
@@ -12,6 +14,12 @@ app.get('/', (req, res)=> {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+
+
+// Initialize the database
+initializeDatabase().then(() => {
+  app.listen(3000, () => {
+    console.log("Server is running on port 3000");
+  });
 });
+

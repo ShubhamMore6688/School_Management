@@ -1,7 +1,4 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import mysql from "mysql2/promise";
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
@@ -13,4 +10,24 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
-export default pool;
+// Function to create the table
+async function initializeDatabase() {
+  const createTableQuery = `
+    CREATE TABLE IF NOT EXISTS schools (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      address VARCHAR(255) NOT NULL,
+      latitude FLOAT NOT NULL,
+      longitude FLOAT NOT NULL
+    );
+  `;
+  const connection = await pool.getConnection();
+  try {
+    await connection.query(createTableQuery);
+    console.log("Table 'schools' is ready!");
+  } finally {
+    connection.release();
+  }
+}
+
+export { pool, initializeDatabase };
