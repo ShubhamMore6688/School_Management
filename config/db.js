@@ -4,7 +4,7 @@ const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
-  database: process.env.DB_NAME,
+  database: process.env.DB_NAME, // Database name specified here
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
@@ -23,8 +23,12 @@ async function initializeDatabase() {
   `;
   const connection = await pool.getConnection();
   try {
+    // Ensure the database is selected
+    await connection.query(`USE ${process.env.DB_NAME}`);
     await connection.query(createTableQuery);
     console.log("Table 'schools' is ready!");
+  } catch (error) {
+    console.error("Error initializing database:", error.message);
   } finally {
     connection.release();
   }
